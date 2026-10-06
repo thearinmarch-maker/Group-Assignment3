@@ -1,0 +1,32 @@
+﻿version: '3.8'
+
+services:
+  nginx:
+    image: /custom-nginx:latest
+    ports:
+      - "80:80"
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+    networks:
+      - app-net
+
+  backend:
+    image: /backend-service:latest
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 5s
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: overlay
